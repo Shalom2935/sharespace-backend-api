@@ -8,7 +8,8 @@ const documentSchema = new mongoose.Schema({
     semester: { type: Number, required: true },
     subfield: { type: String, required: true },
     description: { type: String },
-    filePath: { type: String, required: true },
+    file: { type: Buffer, required: true },
+    fileType: String,
     date: { type: Date, default: Date.now}
 });
 
