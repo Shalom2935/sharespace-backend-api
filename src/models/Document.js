@@ -10,6 +10,7 @@ const documentSchema = new mongoose.Schema({
     description: { type: String },
     file: { type: Buffer, required: true },
     fileType: String,
+    fileHash: String,
     date: { type: Date, default: Date.now}
 });
 
