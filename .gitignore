@@ -1,5 +1,8 @@
-#Node modules
+# Node modules
 /node_modules
 
-#Environment
+# Environment
 .env
+
+# Ignore Google Cloud Service Account Key
+sjp-share-space-keyfile.json
