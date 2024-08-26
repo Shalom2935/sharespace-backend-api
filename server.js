@@ -1,6 +1,6 @@
 const express = require('express');
 const connectDB = require('./src/config/database'); // ConnectDB function import
-const upload = require('./src/middlewares/multerConfig')
+const upload = require('./src/middlewares/uploadMiddleware')
 const cors = require('cors');
 const Document = require('./src/models/Document');
 const ErrorHandler = require('./src/utils/errorHandler');
