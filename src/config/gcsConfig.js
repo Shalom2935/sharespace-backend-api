@@ -3,11 +3,11 @@ const path = require('path');
 
 // Initialize Google Cloud Storage Client
 const storage = new Storage({
-    keyFilename: path.join(__dirname, process.env.GCP_KEYFILE_PATH),
+    keyFilename: path.join(__dirname, '../../sjp-share-space-keyfile.json'),
     projectId: process.env.GCP_PROJECT_ID
 });
 
 // Bucket reference
-const bucket = storage.bucket(process.env.GCP_BUCKET_NAME);
+const bucket = storage.bucket('sharespace-documents');
 
 module.exports = bucket;

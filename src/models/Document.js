@@ -8,12 +8,14 @@ const documentSchema = new mongoose.Schema({
     semester: { type: Number, required: true },
     subfield: { type: String, required: true },
     description: { type: String },
-    file: { type: Buffer, required: true },
+    fileUrl: String,
+    prevImgUrl: String,
+    //file: { type: Buffer, required: true },
     fileType: String,
-    fileHash: String,
+    //fileHash: String,
     date: { type: Date, default: Date.now}
 });
 
-const Document = mongoose.model('Document', documentSchema);
+const Document = mongoose.model('Document', documentSchema, 'files data');
 
 module.exports = Document;

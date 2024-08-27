@@ -1,33 +1,31 @@
-const multer = require('multer');
 const { format } = require('util');
 const bucket = require('../config/gcsConfig');
 
-// Multer configuration
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-
-
 const uploadFileToGCS = (req, res, next) => {
-    if (!req.file) return next();
-    const blob = bucket.file(req.file.originalname);
+    if (!req.files || !req.files.file) {
+        return next(); // No file found, move to the next middleware
+    }
+
+    const file = req.files.file;
+    const fileName = `Files/${file.name}`;
+    const blob = bucket.file(fileName);
     const blobStream = blob.createWriteStream({
-        resumable: false
+        resumable: false,
     });
 
     blobStream.on('error', (err) => {
-        next(err)
+        next(err);
     });
 
     blobStream.on('finish', async () => {
         // Public file's URL
-        req.file.cloudStoragePublicUrl = format(
+        req.fileUrl = format(
             `https://storage.googleapis.com/${bucket.name}/${blob.name}`
         );
         next();
     });
 
-    blobStream.end(req.file.buffer);
+    blobStream.end(file.data);
 };
 
-module.exports = { upload, uploadFileToGCS };
-
+module.exports = uploadFileToGCS;
