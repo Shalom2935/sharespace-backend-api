@@ -1,5 +1,7 @@
 const { format } = require('util');
 const bucket = require('../config/gcsConfig');
+const { v4: uuidv4 } = require('uuid');
+
 
 const uploadFileToGCS = (req, res, next) => {
     if (!req.files || !req.files.file) {
@@ -7,14 +9,16 @@ const uploadFileToGCS = (req, res, next) => {
     }
 
     const file = req.files.file;
-    const fileName = `Files/${file.name}`;
-    const blob = bucket.file(fileName);
+    const filename = `Files/${uuidv4()}-${file.name}`;
+    req.fileName = filename;
+    const blob = bucket.file(filename);
     const blobStream = blob.createWriteStream({
         resumable: false,
     });
 
     blobStream.on('error', (err) => {
-        next(err);
+        // Send error response if upload fails
+        return res.status(500).json({ error: 'Failed to upload file.', details: err.message });
     });
 
     blobStream.on('finish', async () => {
