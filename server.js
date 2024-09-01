@@ -99,12 +99,13 @@ app.get('/documents', async (req, res) => {
 //     }
 // })
 // Download file
+
 app.get('/download/:id', async (req, res) => { 
 
     const { id } = req.params; 
   
     try {
-        // Rechercher le document par son _id et récupérer le fileName
+        // Find document by id and get the file name
         const document = await Document.findById(id);
 
         if (!document || !document.fileName) {
@@ -121,17 +122,44 @@ app.get('/download/:id', async (req, res) => {
         console.log(type)
         const [file] = await bucket.file(fileName).download();
 
-        // Définir les en-têtes pour le téléchargement du fichier
+        // Set Headers for download
         res.setHeader('Content-Disposition', `attachment; filename="${title}.${fileTypeMapping[type]}"`);
         res.setHeader('Content-type', type);
-        // Envoyer le fichier en réponse
+        // Send response
         res.send(file);
-        console.log(file);
     } catch (error) {
         console.error('Error downloading the file:', error);
         res.status(500).send('Error downloading the file');
     }
 });
+
+// Preview in the browser
+app.get('/preview/:id', async (req, res) => { 
+    const { id } = req.params; 
+
+    try {
+        const document = await Document.findById(id);
+        if (!document || !document.fileName) {
+            return res.status(404).send('File not found');
+        }
+        const fileName = document.fileName;
+        const title = document.title;
+        const type = document.fileType;
+        let fileTypeMapping = {
+            'application/pdf': 'pdf',
+            'application/msword': 'doc',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
+        };
+        const [file] = await bucket.file(fileName).download();
+
+        res.setHeader('Content-Disposition', `attachment; filename="${title}.${fileTypeMapping[type]}"`);        res.setHeader('Content-type', type);
+        res.send(file);
+    } catch (error) {
+        console.error('Error previewing the file:', error);
+        res.status(500).send('Error previewing the file');
+    }
+});
+
 // Listen on port 5000
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
