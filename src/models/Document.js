@@ -10,7 +10,7 @@ const documentSchema = new mongoose.Schema({
     description: { type: String },
     fileName: String,
     fileUrl: String,
-    prevImgUrl: String,
+    previewImageUrl: String,
     //file: { type: Buffer, required: true },
     fileType: String,
     //fileHash: String,

@@ -7,6 +7,7 @@ const uploadFileToGCS = require('./src/middlewares/uploadMiddleware');
 const bucket = require('./src/config/gcsConfig');
 const ErrorHandler = require('./src/utils/errorHandler');
 const configureBucketCors = require('./src/config/corsConfig');
+const {addToQueue} = require('./src/services/queue');
 //const { generateFileHash } = require('./src/utils/fileUtils');
 require('dotenv').config(); // Load environment variables
 
@@ -69,8 +70,12 @@ app.post('/upload',uploadFileToGCS, async (req, res) => {
         });
 
         await newDocument.save();
+        res.status(201).json({ message: 'File uploaded and saved to database successfully.  Preview image will be processed soon.' });
 
-        res.status(201).json({ message: 'File uploaded and saved to database successfully' });
+        // Add document preview generation to queue
+
+        addToQueue(newDocument._id, req.files.file);
+        
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Failed to upload and save file', error: error.message });

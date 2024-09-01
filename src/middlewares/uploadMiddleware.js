@@ -18,7 +18,9 @@ const uploadFileToGCS = (req, res, next) => {
 
     blobStream.on('error', (err) => {
         // Send error response if upload fails
+        if (!res.headersSent) {
         return res.status(500).json({ error: 'Failed to upload file.', details: err.message });
+    }
     });
 
     blobStream.on('finish', async () => {
