@@ -67,6 +67,7 @@ app.post('/upload',uploadFileToGCS, async (req, res) => {
             fileUrl: req.fileUrl,
             //file: req.file.buffer,  // Store file as a buffer
             fileType: req.files.file.mimetype,  // Store the file's MIME type
+            previewImageUrl: ''
         });
 
         await newDocument.save();
@@ -75,7 +76,7 @@ app.post('/upload',uploadFileToGCS, async (req, res) => {
         // Add document preview generation to queue
 
         addToQueue(newDocument._id, req.files.file);
-        
+
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Failed to upload and save file', error: error.message });
@@ -93,16 +94,19 @@ app.get('/documents', async (req, res) => {
     }
 });
 
-// Get file name
-// app.get('/filename', async (req, res) => {
-//     try{
-//         const filename = await req.fileName;
-//         res.send(filename);
-//     } catch(error) {
-//         console.error('Error getting the file name:', error);
-//         res.status(500).send('Error getting the file name'); 
-//     }
-// })
+// Get file info
+app.get('/documents/:id', async (req, res) => {
+    
+    const { id } = req.params;
+
+    try {
+        const document = await Document.findById(id);
+        res.status(200).json(document);
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Failed to fetch the document', error: error.message });
+    }
+})
 // Download file
 
 app.get('/download/:id', async (req, res) => { 
