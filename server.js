@@ -8,13 +8,16 @@ const bucket = require('./src/config/gcsConfig');
 const ErrorHandler = require('./src/utils/errorHandler');
 const configureBucketCors = require('./src/config/corsConfig');
 const {addToQueue} = require('./src/services/queue');
-//const { generateFileHash } = require('./src/utils/fileUtils');
+const authRoutes = require('./src/routes/authRoutes');
+
+
 require('dotenv').config(); // Load environment variables
 
 const app = express();
 
 // Connection to MongoDB
 connectDB();
+
 configureBucketCors();
 // Enable CORS for all routes
 app.use(cors({
@@ -24,34 +27,40 @@ app.use(cors({
 // Configure file upload middleware
 app.use(fileUpload());
 
+// Parse JSON bodies (important for POST requests with JSON payload)
+app.use(express.json());
+
+/*
+    Documents handling Logic (CRUD) :
+    * Upload Document
+    * Get Documents
+    * Get Single Document
+    * Download Document
+    * Preview Document in Browser
+    * ? Update Document (To be added)
+    * ? Delete Document (To be added)
+    
+*/
+
 // Files upload
 app.post('/upload',uploadFileToGCS, async (req, res) => {
+    
     try {
-
-        // Generate file hash
-        //const fileHash = generateFileHash(req.file.buffer);
-        //console.log(fileHash)
-        
-        // Check existing file with the same hash
-        // const existingDocument = await Document.findOne({ fileHash });
-        // if (existingDocument) {
-        //     return res.status(400).json({ message: 'A file with the same content already exists.' });
-        // }
-
         // Required field 
         const fieldError = ErrorHandler.validateFields(req);
+        
         if (fieldError) {
             return res.status(400).json({ message: fieldError });
         }
-
         // Supported file types only word & pdf
         const fileTypeError = ErrorHandler.validateFileType(req.files.file);
+       
         if (fileTypeError) {
             return res.status(400).json({ message: fileTypeError });
         }
-
         // File max size 10 MB
         const fileSizeError = ErrorHandler.validateFileSize(req.files.file);
+ 
         if (fileSizeError) {
             return res.status(400).json({ message: fileSizeError });
         }
@@ -65,7 +74,6 @@ app.post('/upload',uploadFileToGCS, async (req, res) => {
             description: req.body.description,
             fileName: req.fileName,
             fileUrl: req.fileUrl,
-            //file: req.file.buffer,  // Store file as a buffer
             fileType: req.files.file.mimetype,  // Store the file's MIME type
             previewImageUrl: ''
         });
@@ -74,7 +82,6 @@ app.post('/upload',uploadFileToGCS, async (req, res) => {
         res.status(201).json({ message: 'File uploaded and saved to database successfully.  Preview image will be processed soon.' });
 
         // Add document preview generation to queue
-
         addToQueue(newDocument._id, req.files.file);
 
     } catch (error) {
@@ -85,10 +92,12 @@ app.post('/upload',uploadFileToGCS, async (req, res) => {
 
 // Get files
 app.get('/documents', async (req, res) => {
+    
     try {
         //console.log(req.body.fileName)
         const documents = await Document.find(); 
         res.status(200).json(documents);
+    
     } catch (error) {
         res.status(500).json({ message: 'Failed to retrieve documents', error: error.message });
     }
@@ -107,8 +116,8 @@ app.get('/documents/:id', async (req, res) => {
         res.status(500).json({ message: 'Failed to fetch the document', error: error.message });
     }
 })
-// Download file
 
+// Download file
 app.get('/download/:id', async (req, res) => { 
 
     const { id } = req.params; 
@@ -168,6 +177,22 @@ app.get('/preview/:id', async (req, res) => {
         res.status(500).send('Error previewing the file');
     }
 });
+
+
+/*
+    
+    Users Handling Logic :
+    * Sign Up
+    * LogIn
+    * Logout
+    * Account Recovery
+    * Password Change
+    
+
+*/
+
+// Routes
+app.use('/api/auth', authRoutes);
 
 // Listen on port 5000
 const PORT = process.env.PORT;
