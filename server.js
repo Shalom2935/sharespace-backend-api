@@ -19,10 +19,16 @@ const app = express();
 connectDB();
 
 configureBucketCors();
+
 // Enable CORS for all routes
 app.use(cors({
-    exposedHeaders: ['Content-Disposition']
-}));
+    origin: 'https://sharespace-dev-frontend.web.app',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+  }));
+
+app.options('*', cors());  // Enable pre-flight for all routes
 
 // Configure file upload middleware
 app.use(fileUpload());

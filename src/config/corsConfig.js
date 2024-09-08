@@ -7,7 +7,7 @@ const bucket = require('./gcsConfig');
  */
 
 // The origin for this CORS config to allow requests from
-const origin = 'http://localhost:3000';
+const origin = '*';
 
 // The response header to share across origins
 const responseHeader = 'Content-Type';
