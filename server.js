@@ -202,5 +202,5 @@ app.get('/preview/:id', async (req, res) => {
 app.use('/api/auth', authRoutes);
 
 // Listen on port 5000
-const PORT = process.env.PORT;
+const PORT = 8080;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
