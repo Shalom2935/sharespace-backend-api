@@ -7,6 +7,6 @@
 # Ignore Google Cloud Service Account Key
 sjp-share-space-keyfile.json
 
-app-dev.yaml
+app.yaml
 
 .gcloudignore

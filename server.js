@@ -22,6 +22,7 @@ configureBucketCors();
 
 // Enable CORS for all routes
 app.use(cors({
+    origin: '*',
     exposedHeaders: ['Content-Disposition']
 
   }));
