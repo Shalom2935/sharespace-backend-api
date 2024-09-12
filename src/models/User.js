@@ -25,4 +25,4 @@
            default: Date.now,
        },
    });
-   module.exports = mongoose.model('User', UserSchema, 'users');
+   module.exports = mongoose.model('User', UserSchema);

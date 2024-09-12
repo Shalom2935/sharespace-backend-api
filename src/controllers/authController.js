@@ -8,15 +8,9 @@ const sendEmail = require('../utils/sendEmail');
 exports.signup = async (req, res) => {
   const { name, matricule, email, password } = req.body;
   try {
-      let userMatricule = await User.findOne({ matricule });
-      let userEmail = await User.findOne( { email });
-      if (userMatricule) {
-          console.error(userMatricule);
-          return res.status(400).json({ matricule: 'User already exists' });
-      }
-      if (userEmail) {
-        console.error(userEmail);
-        return res.status(400).json({ email: 'User already exists'});
+      let user = await User.findOne({ matricule });
+      if (user) {
+          return res.status(400).json({ msg: 'User already exists' });
       }
 
       user = new User({
@@ -58,14 +52,12 @@ exports.login = async (req, res) => {
   try {
       let user = await User.findOne({ matricule });
       if (!user) {
-          
-          return res.status(400).json({ connexion: 'Invalid matricule or password' });
-          
+          return res.status(400).json({ msg: 'Invalid Credentials' });
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
-          return res.status(400).json({ connexion: 'Invalid matricule or password' });
+          return res.status(400).json({ msg: 'Invalid Credentials' });
       }
 
       const payload = {
@@ -80,7 +72,7 @@ exports.login = async (req, res) => {
           { expiresIn: '5d' },
           (err, token) => {
               if (err) throw err;
-              res.json({ token, matricule: user.matricule });
+              res.json({ token });
           }
       );
   } catch (err) {

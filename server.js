@@ -72,16 +72,15 @@ app.post('/upload',uploadFileToGCS, async (req, res) => {
         if (fileTypeError) {
             return res.status(400).json({ message: fileTypeError });
         }
-        // File max size 20 MB
+        // File max size 10 MB
         const fileSizeError = ErrorHandler.validateFileSize(req.files.file);
  
-        if (fileSizeError) { 
+        if (fileSizeError) {
             return res.status(400).json({ message: fileSizeError });
         }
-        console.log(req)
+
         // If everything is correct create and save the document
         const newDocument = new Document({
-            author: req.body.author,
             title: req.body.title,
             type: req.body.type,
             semester: req.body.semester,
@@ -96,7 +95,7 @@ app.post('/upload',uploadFileToGCS, async (req, res) => {
         await newDocument.save();
         res.status(201).json({ message: 'File uploaded and saved to database successfully.  Preview image will be processed soon.' });
 
-        // Add document preview image generation to queue
+        // Add document preview generation to queue
         addToQueue(newDocument._id, req.files.file);
 
     } catch (error) {

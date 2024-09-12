@@ -3,7 +3,6 @@
 const mongoose = require('mongoose');
 
 const documentSchema = new mongoose.Schema({
-    author: { type: String, required: true },
     title: { type: String, required: true },
     type: { type: String, required: true },
     semester: { type: Number, required: true },
