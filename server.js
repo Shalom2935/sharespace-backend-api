@@ -210,7 +210,7 @@ app.get('/preview/:id', async (req, res) => {
 app.use('/api/auth', authRoutes);
 
 // Listen on port 5000
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 
 // Listen on port 5000
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
