@@ -22,14 +22,21 @@ configureBucketCors();
 
 // Enable CORS for all routes
 app.use(cors({
-    origin: 'https://sharespace-dev-frontend.web.app',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
+    exposedHeaders: ['Content-Disposition']
+
   }));
 
-app.options('*', cors());  // Enable pre-flight for all routes
-
+//   app.options('*', (req, res) => {
+//     res.setHeader('Access-Control-Allow-Origin', 'https://sharespace-dev-frontend.web.app');
+//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//     res.setHeader('Access-Control-Allow-Credentials', 'true');
+//     res.sendStatus(204); // No Content
+// });
+// app.use((req, res, next) => {
+//     res.setHeader('Access-Control-Allow-Origin', '*'); // Allows any origin
+//     next();
+//   });
 // Configure file upload middleware
 app.use(fileUpload());
 
@@ -201,6 +208,6 @@ app.get('/preview/:id', async (req, res) => {
 // Routes
 app.use('/api/auth', authRoutes);
 
-// Listen on port 5000
-const PORT = process.env.PORT;
+// Listen on port 8080
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
