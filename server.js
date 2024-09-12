@@ -7,7 +7,7 @@ const uploadFileToGCS = require('./src/middlewares/uploadMiddleware');
 const bucket = require('./src/config/gcsConfig');
 const ErrorHandler = require('./src/utils/errorHandler');
 const configureBucketCors = require('./src/config/corsConfig');
-const {addToQueue} = require('./src/services/queue');
+//const {addToQueue} = require('./src/services/queue');
 const authRoutes = require('./src/routes/authRoutes');
 
 
@@ -96,7 +96,7 @@ app.post('/upload',uploadFileToGCS, async (req, res) => {
         res.status(201).json({ message: 'File uploaded and saved to database successfully.  Preview image will be processed soon.' });
 
         // Add document preview generation to queue
-        addToQueue(newDocument._id, req.files.file);
+        //addToQueue(newDocument._id, req.files.file);
 
     } catch (error) {
         console.log(error);
