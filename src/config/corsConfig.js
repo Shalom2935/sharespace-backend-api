@@ -19,13 +19,13 @@ const maxAgeSeconds = 3600;
 // The name of the method
 // See the HttpMethod documentation for other HTTP methods available:
 // https://cloud.google.com/appengine/docs/standard/java/javadoc/com/google/appengine/api/urlfetch/HTTPMethod
-const method = 'GET';
+const method = ['GET', 'POST'];
 
 async function configureBucketCors() {
   await bucket.setCorsConfiguration([
     {
       maxAgeSeconds,
-      method: [method],
+      method: method,
       origin: [origin],
       responseHeader: [responseHeader],
     },
