@@ -10,7 +10,7 @@ exports.signup = async (req, res) => {
   try {
       let user = await User.findOne({ matricule });
       if (user) {
-          return res.status(400).json({ msg: 'User already exists' });
+          return res.status(400).json({ matriculeError: 'User already exists' });
       }
 
       user = new User({
@@ -52,12 +52,12 @@ exports.login = async (req, res) => {
   try {
       let user = await User.findOne({ matricule });
       if (!user) {
-          return res.status(400).json({ msg: 'Invalid Credentials' });
+          return res.status(400).json({ connexion: 'Wrong matricule or password' });
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
-          return res.status(400).json({ msg: 'Invalid Credentials' });
+          return res.status(400).json({ connexion: 'Wrong matricule or password' });
       }
 
       const payload = {
@@ -72,7 +72,7 @@ exports.login = async (req, res) => {
           { expiresIn: '5d' },
           (err, token) => {
               if (err) throw err;
-              res.json({ token });
+              res.json({ token, matricule: matricule });
           }
       );
   } catch (err) {

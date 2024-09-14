@@ -7,7 +7,7 @@ const uploadFileToGCS = require('./src/middlewares/uploadMiddleware');
 const bucket = require('./src/config/gcsConfig');
 const ErrorHandler = require('./src/utils/errorHandler');
 const configureBucketCors = require('./src/config/corsConfig');
-//const {addToQueue} = require('./src/services/queue');
+const {addToQueue} = require('./src/services/queue');
 const authRoutes = require('./src/routes/authRoutes');
 
 
@@ -18,7 +18,7 @@ const app = express();
 // Connection to MongoDB
 connectDB();
 
-configureBucketCors();
+//configureBucketCors();
 
 // Enable CORS for all routes
 app.use(cors({
@@ -89,13 +89,13 @@ app.post('/upload',uploadFileToGCS, async (req, res) => {
             fileName: req.fileName,
             fileUrl: req.fileUrl,
             fileType: req.files.file.mimetype,  // Store the file's MIME type
-            previewImageUrl: ''
+            previewImageUrl: 'https://storage.googleapis.com/sharespace-documents/Prev_images/default.jpeg'
         });
 
         await newDocument.save();
         res.status(201).json({ message: 'File uploaded and saved to database successfully.  Preview image will be processed soon.' });
 
-        // Add document preview generation to queue
+        //Add document preview generation to queue
         //addToQueue(newDocument._id, req.files.file);
 
     } catch (error) {
