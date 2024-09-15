@@ -23,7 +23,8 @@ connectDB();
 // Enable CORS for all routes
 app.use(cors({
     origin: '*',
-    exposedHeaders: ['Content-Disposition']
+    exposedHeaders: ['Content-Disposition'],
+    responseHeader: ['Content-Type', 'Cache-Control', 'Expires', 'Last-Modified', 'Content-Disposition']
 
   }));
 

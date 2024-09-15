@@ -1,15 +1,10 @@
 const { Storage } = require('@google-cloud/storage');
+const path = require('path');
 
-// Parse the credentials from the environment variable (GCS_CREDENTIALS)
-const credentials = JSON.parse(process.env.GCS_CREDENTIALS);
-
-// Initialize Google Cloud Storage Client using the parsed credentials
+// Initialize Google Cloud Storage Client
 const storage = new Storage({
-    projectId: process.env.GCP_PROJECT_ID, // Set your project ID from env
-    credentials: {
-        client_email: credentials.client_email,
-        private_key: credentials.private_key
-    }
+    keyFilename: path.join(__dirname, '../../sjp-share-space-keyfile.json'),
+    projectId: process.env.GCP_PROJECT_ID
 });
 
 // Bucket reference
