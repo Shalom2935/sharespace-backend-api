@@ -2,12 +2,18 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Members = require('../models/Member');
 const sendEmail = require('../utils/sendEmail');
 
 // Sign Up
 exports.signup = async (req, res) => {
   const { name, matricule, email, password } = req.body;
   try {
+      // Check if the matricule exists in the Members collection
+      let members = await Members.findOne({ "registered.matricule": matricule });
+      if (!members) {
+          return res.status(400).json({ matriculeError: 'You are not part of the association' });
+      }
       let user = await User.findOne({ matricule });
       if (user) {
           return res.status(400).json({ matriculeError: 'User already exists' });

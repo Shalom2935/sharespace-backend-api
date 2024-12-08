@@ -25,21 +25,9 @@ app.use(cors({
     origin: '*',
     exposedHeaders: ['Content-Disposition'],
     responseHeader: ['Content-Type', 'Cache-Control', 'Expires', 'Last-Modified', 'Content-Disposition']
-
   }));
 
-  app.options('*', (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', 'https://sharespace-dev-frontend.web.app');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Content-Disposition, Authorization');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.sendStatus(204); // No Content
-});
-// app.use((req, res, next) => {
-//     res.setHeader('Access-Control-Allow-Origin', '*'); // Allows any origin
-//     next();
-//   });
-// Configure file upload middleware
+
 app.use(fileUpload());
 
 // Parse JSON bodies (important for POST requests with JSON payload)
