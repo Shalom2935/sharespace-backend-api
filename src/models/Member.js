@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const MemberSchema = new mongoose.Schema({
-    regitered: {
         lastName: String,
         firstName: String,
         birth : Date,
@@ -9,6 +8,6 @@ const MemberSchema = new mongoose.Schema({
         phone: String,
         email: String,
         matricule: String,
-    }
+        password: String
 });
 module.exports = mongoose.model('Member', MemberSchema, 'members');

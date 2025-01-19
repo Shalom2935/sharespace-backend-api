@@ -7,6 +7,9 @@ const router = express.Router();
 router.post('/signup', signup);
 router.post('/login', login);
 
+// Update password
+router.post('/update-password', updatePassword);
+
 // Backup Token Routes
 router.post('/generate-backup-token', generateBackupToken);
 router.post('/recover=password', recoverPassword);
